@@ -4,7 +4,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: apeboard_backend
+    container_name: apeboard_app
     restart: always
     volumes:
       - ./src:/app/src
@@ -13,3 +13,16 @@ services:
       - 3000:3000
     environment:
       NODE_ENV: development
+  
+  cache:
+    image: redis:alpine
+    container_name: apeboard_cache
+    restart: always
+    ports:
+      - 6379:6379
+    volumes:
+      - ./cache:/data
+  
+networks:
+  default:
+    name: apeboard_network
