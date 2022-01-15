@@ -7,7 +7,7 @@ export class AutofarmController {
 
     @Get('/cache/update')
     async updateCache(): Promise<string>{
-        return "Cache Updated"
+        return await this.autofarmService.updateCache();
     }
 
     @Get(':address')
@@ -15,6 +15,6 @@ export class AutofarmController {
         @Param('address')
         address: string
     ): Promise<string>{
-        return address
+        return await this.autofarmService.getAddressInformation(address);
     }
 }

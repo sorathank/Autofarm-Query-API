@@ -25,6 +25,7 @@ services:
     volumes:
       - ./cache:/data
     command: redis-server --save 20 1
+    
 networks:
   default:
     name: apeboard_network
