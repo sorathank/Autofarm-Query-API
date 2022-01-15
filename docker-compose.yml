@@ -6,6 +6,8 @@ services:
       dockerfile: Dockerfile
     container_name: apeboard_app
     restart: always
+    depends_on:
+      - cache
     volumes:
       - ./src:/app/src
       - ./test:/app/test
