@@ -1,8 +1,10 @@
 import * as redisStore from 'cache-manager-redis-store'
 import { CacheModule, Module } from '@nestjs/common';
-import { MasterchefConnectorModule } from 'src/masterchefconnector/masterchefconnector.module';
+import { MasterChefConnectorModule } from 'src/masterchefconnector/masterchefconnector.module';
 import { AutofarmController } from './autofarm.controller';
 import { AutofarmService } from './autofarm.service';
+import { getJsonRPCURL, getMasterChefContract } from 'src/config/rpc.config';
+import * as MASTERCHEF_ABI from '../abi/autofarm/masterchef.abi.json';
 
 @Module({
   imports: [
@@ -12,7 +14,14 @@ import { AutofarmService } from './autofarm.service';
       port: "6379",
       ttl: 0
     }),
-    MasterchefConnectorModule
+    MasterChefConnectorModule.register(
+      {
+        rpcUrl: getJsonRPCURL(),
+        chainId: 56,
+        masterChefAddr: getMasterChefContract(),
+        masterchefABI: MASTERCHEF_ABI
+      }
+    )
   ],
   controllers: [AutofarmController],
   providers: [AutofarmService]

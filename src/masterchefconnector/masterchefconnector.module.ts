@@ -1,8 +1,20 @@
-import { CacheModule, Module } from '@nestjs/common';
-import { MasterchefConnectorService } from './masterchefconnector.service';
+import { DynamicModule, Module } from '@nestjs/common';
+import { MasterChefConnectorOptions } from './masterchefconnector.options';
+import { MasterChefConnectorService } from './masterchefconnector.service';
 
-@Module({
-  providers: [MasterchefConnectorService],
-  exports: [MasterchefConnectorService]
-})
-export class MasterchefConnectorModule {}
+@Module({})
+export class MasterChefConnectorModule {
+  static register(options: MasterChefConnectorOptions): DynamicModule {
+    return {
+      module: MasterChefConnectorModule,
+      providers: [
+        {
+          provide: 'MASTERCHEF_CONNECTOR_OPTIONS',
+          useValue: options
+        },
+        MasterChefConnectorService
+      ],
+      exports: [MasterChefConnectorService]
+    }
+  }
+}

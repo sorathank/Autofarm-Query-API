@@ -1,15 +1,15 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { MasterchefConnectorService } from './masterchefconnector.service';
+import { MasterChefConnectorService as MasterChefConnectorService } from './masterchefconnector.service';
 
-describe('MasterchefConnectorService', () => {
-  let service: MasterchefConnectorService;
+describe('MasterChefConnectorService', () => {
+  let service: MasterChefConnectorService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [MasterchefConnectorService],
+      providers: [MasterChefConnectorService],
     }).compile();
 
-    service = module.get<MasterchefConnectorService>(MasterchefConnectorService);
+    service = module.get<MasterChefConnectorService>(MasterChefConnectorService);
   });
 
   it('should be defined', () => {
