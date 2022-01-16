@@ -1,7 +1,7 @@
-export function getJsonRPCURL(): string {
-    return process.env.RPC_URL
+export function getBscJsonRpcUrl(): string {
+    return process.env.BSC_RPC_URL
 }
 
-export function getMasterChefContract(): string {
-    return process.env.MASTERCHEF_ADDR
+export function getAutofarmMasterChefAddr(): string {
+    return process.env.AUROFARM_MASTERCHEF_ADDR
 }

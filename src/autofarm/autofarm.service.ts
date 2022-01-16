@@ -4,7 +4,7 @@ import { Cache } from 'cache-manager';
 import { ethers } from 'ethers';
 import * as ERC20_ABI from '../abi/erc20.abi.json'
 import * as CAKELP_ABI from '../abi/cakeLP.abi.json'
-import { getJsonRPCURL, getMasterChefContract } from 'src/config/rpc.config';
+import { getBscJsonRpcUrl, getAutofarmMasterChefAddr } from 'src/config/rpc.config';
 import { Contract, Provider } from 'ethers-multicall';
 import { MasterChefConnectorService } from 'src/masterchefconnector/masterchefconnector.service';
 

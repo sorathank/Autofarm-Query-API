@@ -3,7 +3,7 @@ import { CacheModule, Module } from '@nestjs/common';
 import { MasterChefConnectorModule } from 'src/masterchefconnector/masterchefconnector.module';
 import { AutofarmController } from './autofarm.controller';
 import { AutofarmService } from './autofarm.service';
-import { getJsonRPCURL, getMasterChefContract } from 'src/config/rpc.config';
+import { getBscJsonRpcUrl, getAutofarmMasterChefAddr } from 'src/config/rpc.config';
 import * as MASTERCHEF_ABI from '../abi/autofarm/masterchef.abi.json';
 
 @Module({
@@ -16,9 +16,9 @@ import * as MASTERCHEF_ABI from '../abi/autofarm/masterchef.abi.json';
     }),
     MasterChefConnectorModule.register(
       {
-        rpcUrl: getJsonRPCURL(),
+        rpcUrl: getBscJsonRpcUrl(),
         chainId: 56,
-        masterChefAddr: getMasterChefContract(),
+        masterChefAddr: getAutofarmMasterChefAddr(),
         masterchefABI: MASTERCHEF_ABI
       }
     )
