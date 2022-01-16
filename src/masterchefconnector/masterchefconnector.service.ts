@@ -38,8 +38,4 @@ export class MasterChefConnectorService {
     getMulticallMasterChef(): Contract {
         return this.multicallMasterChef;
     }
-
-    async getPoolLength(): Promise<Number> {
-        return Number((await this.masterChef.poolLength())._hex);
-    }
 }

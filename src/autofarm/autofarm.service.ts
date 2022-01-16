@@ -18,9 +18,21 @@ export class AutofarmService {
     ) {}
 
     async updateCache(): Promise<string>{
-        // TODO: FETCH Pool informations
-        const cachedPoolLength = await this.cacheManager.get("poolLength");
-        const latestPoolLength = await this.masterchefConnector.getPoolLength();
+        /*TODO: FETCH Pool informations
+        REQUIRED INFORMATIONS
+        - Pool'id (for indexing)
+
+        - Staked LP Address, Decimals
+
+        - Token 0 Address, Symbol, Decimals
+        - Token 1 Address, Symbol, Decimals
+
+        - Reward Address, Symbol, Decimals
+
+        - Strat Address (MAYBE!??)
+        */
+        const cachedPoolLength = await this.cacheManager.get("autofarmPoolLength");
+        const latestPoolLength = await this.getPoolLength();
         // if (!cachedPoolLength || latestPoolLength) {
         //     this.cacheManager.set("poolLength", latestPoolLength);
         //     let temp = [];
@@ -38,10 +50,12 @@ export class AutofarmService {
     }
 
     async getAddressInformation(address: string): Promise<string>{
-        await this.cacheManager.set("cache", "Updated")
-        console.log(await this.cacheManager.get("cache"))
-        return await this.cacheManager.get("cache")
         return "Hello"
+    }
+
+    private async getPoolLength(): Promise<Number> {
+        const masterChef = this.masterchefConnector.getMasterChefContract();
+        return Number((await masterChef.poolLength())._hex);
     }
 
 }
