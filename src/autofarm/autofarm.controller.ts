@@ -21,6 +21,7 @@ export class AutofarmController {
         @Param('address')
         address: string
     ): Promise<FarmDto[]>{
+        await this.autofarmService.validateCacheAndInput(address);
         return await this.autofarmService.getAddressInformation(address);
     }
 
