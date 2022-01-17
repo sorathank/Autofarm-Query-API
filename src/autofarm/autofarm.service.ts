@@ -7,9 +7,8 @@ import { ChainConnectorService } from 'src/chain-connector/chain-connector.servi
 import { getAutofarmMasterChefAddr } from 'src/config/rpc.config';
 import { Pool, Token, TokenType } from './entities/pool.entity';
 import { FarmDto, TokenDto } from './dto/farm.dto';
-import { hexToNumber } from 'src/utils/utils';
 import { isAddress } from 'ethers/lib/utils';
-import { Contract, ContractCall, Provider } from 'ethers-multicall';
+import { Contract, Provider } from 'ethers-multicall';
 
 @Injectable()
 export class AutofarmService {
