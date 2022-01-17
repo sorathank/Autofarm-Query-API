@@ -1,4 +1,4 @@
-import { CACHE_MANAGER, Inject, Injectable } from '@nestjs/common';
+import { CACHE_MANAGER, Inject, Injectable, ServiceUnavailableException } from '@nestjs/common';
 import { Cache } from 'cache-manager';
 import { Contract, ethers } from 'ethers';
 import * as MASTERCHEF_ABI from '../abi/autofarm/masterchef.abi.json'
@@ -50,6 +50,9 @@ export class AutofarmService {
 
     async getAddressInformation(addr: string): Promise<FarmDto[]> {
         const cache: Pool[] = await this.getCache();
+        if (cache == null) {
+            throw new ServiceUnavailableException("Cache is empty.")
+        }
         var farmsDto: Promise<FarmDto>[] = [];
         farmsDto = cache.map(async pool => {
             if (pool) {
