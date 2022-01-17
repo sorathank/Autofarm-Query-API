@@ -18,6 +18,7 @@ export class ChainConnectorService {
     }
 
     getContract(addr: string, abi: ContractInterface): Contract{
-        return new Contract(addr, abi, this.jsonRpcProvider)
+        const contract: Contract = new Contract(addr, abi,this.jsonRpcProvider)
+        return contract
     }
 }
