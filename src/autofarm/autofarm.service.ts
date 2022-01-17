@@ -26,20 +26,18 @@ export class AutofarmService {
 
     async updateCache() {
         const latestPoolLength = await this.getPoolLength();
-        var pools = Array.from({length: latestPoolLength - 1}, (_, i) => i + 1).map(
-            poolId => this.fetchPoolInfo(poolId)
+        const multicallMasterChef: multicall.Contract = this.chainConnector.getMulticallContract(this.masterchef.address, MASTERCHEF_ABI);
+        var poolIds = Array.from({length: latestPoolLength - 1}, (_, i) => i + 1).map(
+            poolId => multicallMasterChef.poolInfo(poolId)
         );
-        
-        var resp = await Promise.allSettled(pools);
-        var cache = Promise.allSettled(resp.map((pool, idx) => {
-            if (pool.status === 'fulfilled') {
-                return this.fetchTokenInfo(pool.value, idx)
-            }
-            return
-        }))
+        const pools = await this.chainConnector.getMulticallProvider().all(poolIds)
 
-        const cachedData: Pool[] = (await cache).map(pool => pool.status === 'fulfilled' && pool.value)
-        
+        const fetchList: Promise<Pool>[] = pools.map((pool, idx) => 
+            pool && this.fetchTokenInfo(pool, idx + 1)
+        )
+        var cache = await Promise.allSettled(fetchList);
+
+        const cachedData: Pool[] =  cache.map(pool => pool.status === 'fulfilled' && pool.value)
         this.cacheManager.set('autofarmPools', cachedData);
         return cachedData;
     }
@@ -71,25 +69,24 @@ export class AutofarmService {
         return parseInt((await this.masterchef.poolLength())._hex, 16);
     }
 
-    private async fetchPoolInfo(n: number) {
-        return this.masterchef.poolInfo(n);
-    }
-
     private async fetchTokenInfo(poolInfo, poolId: number) {
         const addr: string = poolInfo.want;
         const strat: string = poolInfo.strat;
         var pool: Pool = {
-            poolId: poolId + 1,
+            poolId: poolId,
             strat: strat
         };
         const lpContract: Contract = this.chainConnector.getContract(addr, CAKELP_ABI)
-        const tokens = await Promise.allSettled([lpContract.token0(), lpContract.token1()]);
-        if (tokens[0].status === 'fulfilled' && tokens[1].status === 'fulfilled') {
-            const tokenAddresses = await Promise.allSettled(tokens.map(async x => {
-                if (x.status === 'fulfilled'){
-                    return await this.fetchERC20Info(x.value);
-                }
-            }))
+        const lpMulticall: multicall.Contract = this.chainConnector.getMulticallContract(addr, CAKELP_ABI)
+        const multicallProvider: multicall.Provider = this.chainConnector.getMulticallProvider();
+        try {
+            const tokens = await multicallProvider.all([
+                lpMulticall.token0(),
+                lpMulticall.token1()
+            ]);
+
+
+            const tokenAddresses = await Promise.allSettled(tokens.map(async x => this.fetchERC20Info(x)));
             
             const tokenInfos = tokenAddresses.map(token => (token.status === 'fulfilled' && (token.value)));
             pool.lpAddress = addr;
@@ -97,24 +94,27 @@ export class AutofarmService {
             pool.token0 = tokenInfos[0];
             pool.token1 = tokenInfos[1];
             pool.type = TokenType.LP;
+                
             
-        }
-        else {
+        }catch(e) {
             pool.token = await this.fetchERC20Info(addr)
             pool.type = TokenType.Single;
         }
+        
         return pool;
             
     }
 
     private async fetchERC20Info(addr: string): Promise<Token>{
-        const erc20Token: Contract = this.chainConnector.getContract(addr, ERC20_ABI);
+        const erc20Token: multicall.Contract = this.chainConnector.getMulticallContract(addr, ERC20_ABI);
+        const provider: multicall.Provider = this.chainConnector.getMulticallProvider();
         
         try {
+            const [decimal, symbol] = await provider.all([erc20Token.decimals(), erc20Token.symbol()]);
             var token: Token = {
                 address: addr,
-                decimal: await erc20Token.decimals(),
-                symbol: await erc20Token.symbol()
+                decimal: decimal,
+                symbol: symbol
             };
             return token
         }
