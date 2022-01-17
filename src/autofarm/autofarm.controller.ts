@@ -5,8 +5,13 @@ import { AutofarmService } from './autofarm.service';
 export class AutofarmController {
     constructor(private readonly autofarmService: AutofarmService){}
 
+    @Get('/cache')
+    async getCache() {
+        return await this.autofarmService.getCache();
+    }
+    
     @Get('/cache/update')
-    async updateCache(): Promise<string>{
+    async updateCache() {
         return await this.autofarmService.updateCache();
     }
 
@@ -17,4 +22,6 @@ export class AutofarmController {
     ): Promise<string>{
         return await this.autofarmService.getAddressInformation(address);
     }
+
+    
 }
