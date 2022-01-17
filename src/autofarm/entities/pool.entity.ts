@@ -1,11 +1,7 @@
-export interface TempPool {
-    [key: string]: any
-}
-
 export interface Token {
-    tokenAddress: string,
-    tokenDecimal: number,
-    tokenSymbol: string
+    address: string,
+    decimal: number,
+    symbol: string
 }
 
 export enum TokenType {
@@ -14,6 +10,7 @@ export enum TokenType {
 }
 export interface Pool {
     poolId: number,
+    strat?: string,
 
     // LP
     lpAddress?: string,

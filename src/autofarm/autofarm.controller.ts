@@ -1,5 +1,6 @@
 import { Controller, Get, Param } from '@nestjs/common';
 import { AutofarmService } from './autofarm.service';
+import { FarmDto } from './dto/farm.dto';
 
 @Controller('autofarm')
 export class AutofarmController {
@@ -19,7 +20,7 @@ export class AutofarmController {
     async getStakedBalance(
         @Param('address')
         address: string
-    ): Promise<string>{
+    ): Promise<FarmDto[]>{
         return await this.autofarmService.getAddressInformation(address);
     }
 
