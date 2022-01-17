@@ -161,9 +161,10 @@ export class AutofarmService {
 
             const res: FarmDto = {
                 tokens: [token0Dto, token1Dto],
-                balance: stakedToken,
+                balance: stakedToken / 10**pool.lpDecimals,
                 lpAddress: pool.lpAddress,
-                rewards: rewards
+                rewards: rewards,
+                poolAddress: '0x0895196562C7868C5Be92459FaE7f877ED450452'
             }
 
             return res
@@ -183,11 +184,11 @@ export class AutofarmService {
                 balance: stakedToken / 10**pool.token.decimal,
             }
             
-            console.log(pendingReward)
             const res: FarmDto = {
                 tokens: [tokenDto],
                 balance: stakedToken / 10**pool.token.decimal,
-                rewards: rewards
+                rewards: rewards,
+                poolAddress: '0x0895196562C7868C5Be92459FaE7f877ED450452'
             }
             return res;
             

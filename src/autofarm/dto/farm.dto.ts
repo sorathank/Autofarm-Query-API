@@ -9,4 +9,5 @@ export interface FarmDto {
     balance: number,
     lpAddress?: string,
     rewards: TokenDto[],
+    poolAddress: string,
 }
